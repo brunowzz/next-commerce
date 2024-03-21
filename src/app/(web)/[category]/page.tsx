@@ -1,44 +1,72 @@
 import { simplifiedProduct } from '@/interface/simplifiedProduct'
-import { client } from '../../../../../../sanity/lib/client'
-import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import { client } from '../../../../sanity/lib/client'
 import Image from 'next/image'
+import Link from 'next/link'
 
-async function getData() {
-    const query = `*[_type == "product"][0...4] | order(_createdAt desc) {
+async function getData(category: string) {
+    const query = `*[_type == "product" && category->name == "${category}"] {
         _id,
-        price,
-        name,
-        "slug": slug.current,
-        "categoryName": category->name,
-        "imageUrl": images[0].asset->url
-    }`
+            "imageUrl": images[0].asset->url,
+            price,
+            name,
+            "slug": slug.current,
+            "categoryName": category->name
+        }`
 
     const data = await client.fetch(query)
 
     return data
 }
 
-export default async function Newest() {
-    const data: simplifiedProduct[] = await getData()
+async function getAllProduct() {
+    const query = `*[_type == "product"] {
+        _id,
+            "imageUrl": images[0].asset->url,
+            price,
+            name,
+            "slug": slug.current,
+            "categoryName": category->name
+        }`
+
+    const data = await client.fetch(query)
+
+    return data
+}
+
+export default async function Category({
+    params,
+}: {
+    params: { category: string }
+}) {
+    let data: simplifiedProduct[] | null = null
+
+    if (params.category === 'all') {
+        data = await getAllProduct()
+    } else {
+        const category: simplifiedProduct[] = await getData(params.category)
+        if (category.length > 0) {
+            data = category
+        }
+    }
+
+    if (!data) {
+        return (
+            <h2 className="text-center text-xl font-bold">
+                We do not have products for this category
+            </h2>
+        )
+    }
 
     return (
-        <section className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-            <div className="flex items-center justify-between">
+        <main className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+            <section className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-                    Our Newest Products
+                    Our Products for {params.category}
                 </h2>
+            </section>
 
-                <Link
-                    href="/all"
-                    className="flex items-center gap-x-1 text-primary"
-                >
-                    See All <ArrowRight />
-                </Link>
-            </div>
-
-            <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-                {data.map((product) => (
+            <section className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+                {data!.map((product: any) => (
                     <div key={product._id}>
                         <Link href={`/product/${product.slug}`}>
                             <figure className="aspect-square w-full overflow-hidden rounded-md bg-gray-200 hover:opacity-75 hover:shadow lg:h-80">
@@ -68,7 +96,7 @@ export default async function Newest() {
                         </Link>
                     </div>
                 ))}
-            </div>
-        </section>
+            </section>
+        </main>
     )
 }
