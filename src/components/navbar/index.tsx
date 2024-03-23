@@ -4,6 +4,9 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from '../ui/button'
 import { ShoppingBag } from 'lucide-react'
+import { useShoppingCart } from 'use-shopping-cart'
+import ShoppingCartModal from '../shopping-cart-modal'
+import { Sheet, SheetTrigger } from '../ui/sheet'
 
 const links = [
     { name: 'Home', href: '/' },
@@ -14,6 +17,7 @@ const links = [
 
 export default function NavBar() {
     const pathname = usePathname()
+    const { handleCartClick } = useShoppingCart()
 
     return (
         <header className="mb-8 border-b">
@@ -48,16 +52,23 @@ export default function NavBar() {
                 </nav>
 
                 <div className="flex divide-x">
-                    <Button
-                        variant={'outline'}
-                        className="flex h-12 w-12 flex-col gap-y-1.5 rounded-none border-none sm:h-20 sm:w-20 md:h-24"
-                    >
-                        <ShoppingBag />
+                    <Sheet>
+                        <SheetTrigger>
+                            <Button
+                                variant={'outline'}
+                                className="flex h-12 w-12 flex-col gap-y-1.5 rounded-none border-none sm:h-20 sm:w-20 md:h-24"
+                                onClick={() => handleCartClick()}
+                            >
+                                <ShoppingBag />
 
-                        <span className="hidden text-xs font-semibold text-gray-500 sm:block">
-                            Cart
-                        </span>
-                    </Button>
+                                <span className="hidden text-xs font-semibold text-gray-500 sm:block">
+                                    Cart
+                                </span>
+                            </Button>
+                        </SheetTrigger>
+
+                        <ShoppingCartModal />
+                    </Sheet>
                 </div>
             </div>
         </header>
