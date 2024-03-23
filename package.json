@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-slot": "^1.0.2",
     "@sanity/image-url": "^1.0.2",
     "@sanity/vision": "^3.35.1",
@@ -21,7 +22,7 @@
     "react": "^18",
     "react-dom": "^18",
     "sanity": "^3.35.1",
-    "stripe": "^14.21.0",
+    "stripe": "^14.22.0",
     "styled-components": "^6.1.8",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",

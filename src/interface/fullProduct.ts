@@ -6,4 +6,5 @@ export interface fullProduct {
     description: string
     slug: string
     price: number
+    price_id: string
 }

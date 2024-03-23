@@ -5,4 +5,5 @@ export interface simplifiedProduct {
     price: number
     slug: string
     categoryName: string
+    price_id: string
 }
