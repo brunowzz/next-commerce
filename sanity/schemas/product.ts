@@ -30,6 +30,11 @@ export default {
             title: 'Description of product',
         },
         {
+            name: 'price_id',
+            type: 'string',
+            title: 'Price ID',
+        },
+        {
             name: 'slug',
             type: 'slug',
             title: 'Product Slug',

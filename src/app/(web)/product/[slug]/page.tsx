@@ -3,6 +3,8 @@ import { client } from '../../../../../sanity/lib/client'
 import ImageGallery from './components/grid-gallery'
 import { Button } from '@/components/ui/button'
 import { Star, Truck } from 'lucide-react'
+import AddToBag from '@/components/add-to-bag'
+import CheckoutNow from '@/components/checkout-now'
 
 async function getData(slug: string) {
     const query = `*[_type == "product" && slug.current == "${slug}"][0] {
@@ -12,7 +14,8 @@ async function getData(slug: string) {
             images,
             description,
             "slug": slug.current,
-            price
+            price,
+            price_id
         }`
 
     const data = await client.fetch(query)
@@ -77,8 +80,8 @@ export default async function ProductPage({
                         </div>
 
                         <div className="5 flex gap-2">
-                            <Button>Add To Bag</Button>
-                            <Button variant={'secondary'}>Checkout Now</Button>
+                            <AddToBag currency="USD" data={data} />
+                            <CheckoutNow currency="USD" data={data} />
                         </div>
 
                         <p className="my-12 text-base tracking-wide text-gray-500">

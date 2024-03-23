@@ -10,7 +10,8 @@ async function getData(category: string) {
             price,
             name,
             "slug": slug.current,
-            "categoryName": category->name
+            "categoryName": category->name,
+            price_id
         }`
 
     const data = await client.fetch(query)
@@ -26,6 +27,7 @@ async function getAllProduct() {
             name,
             "slug": slug.current,
             "categoryName": category->name
+            price_id
         }`
 
     const data = await client.fetch(query)
